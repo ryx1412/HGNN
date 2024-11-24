@@ -15,7 +15,7 @@ def Eu_dis(x):
                 D: Dimension of the feature
     :return: N X N distance matrix
     """
-    x = np.mat(x)
+    x = np.asmatrix(x)
     aa = np.sum(np.multiply(x, x), 1)
     ab = x * x.T
     dist_mat = aa + aa.T - 2 * ab
@@ -36,7 +36,8 @@ def feature_concat(*F_list, normal_col=False):
     """
     features = None
     for f in F_list:
-        if f is not None and f != []:
+        # if f is not None and f != []:
+        if f is not None and f.size > 0:
             # deal with the dimension that more than two
             if len(f.shape) > 2:
                 f = f.reshape(-1, f.shape[-1])
@@ -62,8 +63,10 @@ def hyperedge_concat(*H_list):
     :return: Fused hypergraph incidence matrix
     """
     H = None
+    # H_list contains possible [], np.ndarray, or None
     for h in H_list:
-        if h is not None and h != []:
+        # if h is not None and h != []:
+        if isinstance(h, np.ndarray) and h.size > 0:
             # for the first H appended to fused hypergraph incidence matrix
             if H is None:
                 H = h
@@ -110,10 +113,10 @@ def _generate_G_from_H(H, variable_weight=False):
     # the degree of the hyperedge
     DE = np.sum(H, axis=0)
 
-    invDE = np.mat(np.diag(np.power(DE, -1)))
-    DV2 = np.mat(np.diag(np.power(DV, -0.5)))
-    W = np.mat(np.diag(W))
-    H = np.mat(H)
+    invDE = np.asmatrix(np.diag(np.power(DE, -1)))
+    DV2 = np.asmatrix(np.diag(np.power(DV, -0.5)))
+    W = np.asmatrix(np.diag(W))
+    H = np.asmatrix(H)
     HT = H.T
 
     if variable_weight:

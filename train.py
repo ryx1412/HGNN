@@ -50,7 +50,6 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25, print_fre
         # Each epoch has a training and validation phase
         for phase in ['train', 'val']:
             if phase == 'train':
-                scheduler.step()
                 model.train()  # Set model to training mode
             else:
                 model.eval()  # Set model to evaluate mode
@@ -86,6 +85,10 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25, print_fre
             if phase == 'val' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_wts = copy.deepcopy(model.state_dict())
+
+        # Scheduler step should be called after optimizer.step()
+        if phase == 'train':
+            scheduler.step()
 
         if epoch % print_freq == 0:
             print(f'Best val Acc: {best_acc:4f}')

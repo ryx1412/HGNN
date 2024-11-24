@@ -15,10 +15,10 @@ def get_config(dir='config/config.yaml'):
         seq = [str(tmp) for tmp in seq]
         return ''.join(seq)
 
-    yaml.add_constructor('!join', join)
-    yaml.add_constructor('!concat', concat)
+    yaml.add_constructor('!join', join, Loader=yaml.SafeLoader)
+    yaml.add_constructor('!concat', concat, Loader=yaml.SafeLoader)
     with open(dir, 'r') as f:
-        cfg = yaml.load(f)
+        cfg = yaml.load(f, Loader=yaml.SafeLoader)
 
     check_dirs(cfg)
 
